@@ -6,6 +6,8 @@ const pricing = require('../pricing')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
+
+
 chai.use(sinonChai)
 
 const { expect } = chai
@@ -113,6 +115,7 @@ describe('Pricing', () => {
     let calculateVolLifePricePerRoleSpy
     let calculateVolLifePriceSpy
     let calculateLTDPriceSpy
+    let calculateCommuterPriceSpy
 
 
     beforeEach(() => {
@@ -123,6 +126,7 @@ describe('Pricing', () => {
       calculateVolLifePricePerRoleSpy = sandbox.spy(pricing, 'calculateVolLifePricePerRole')
       calculateVolLifePriceSpy = sandbox.spy(pricing, 'calculateVolLifePrice')
       calculateLTDPriceSpy = sandbox.spy(pricing, 'calculateLTDPrice')
+      calculateCommuterPriceSpy = sandbox.spy(pricing, 'calculateCommuterPrice')
     })
 
     afterEach(() => {
@@ -170,6 +174,31 @@ describe('Pricing', () => {
       expect(getEmployerContributionSpy).to.have.callCount(1)
       expect(formatPriceSpy).to.have.callCount(1)
     })
+
+    it('returns the price of commuter products (parking)', () => {
+      const selectedOptions = {
+        benefit: 'parking'
+      }
+
+      const price = pricing.calculateProductPrice(products.commuter, employee, selectedOptions)
+
+      expect(price).to.equal(175)
+      expect(calculateCommuterPriceSpy).to.have.callCount(1)
+      expect(getEmployerContributionSpy).to.have.callCount(1)
+      expect(formatPriceSpy).to.have.callCount(1)
+    })
+    it('returns the price of commuter products (train)', () => {
+      const selectedOptions = {
+        benefit: 'train'
+      }
+      const price = pricing.calculateProductPrice(products.commuter, employee, selectedOptions)
+
+      expect(price).to.equal(9.75)
+      expect(calculateCommuterPriceSpy).to.have.callCount(1)
+      expect(getEmployerContributionSpy).to.have.callCount(1)
+      expect(formatPriceSpy).to.have.callCount(1)
+    })
+
 
     it('throws an error on unknown product type', () => {
       const unknownProduct = { type: 'vision' }

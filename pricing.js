@@ -55,6 +55,14 @@ function calculateLTDPrice(product, employee, selectedOptions) {
   return price
 }
 
+function calculateCommuterPrice(product, selectedOptions) {
+  const cost = product.costs.find((cost) => {
+    return cost.type === selectedOptions.benefit
+  })
+
+  return cost.price
+}
+
 
 function calculateProductPrice(product, employee, selectedOptions) {
   let price
@@ -69,6 +77,10 @@ function calculateProductPrice(product, employee, selectedOptions) {
       price = this.calculateLTDPrice(product, employee, selectedOptions)
       employerContribution = this.getEmployerContribution(product.employerContribution, price)
       return this.formatPrice(price - employerContribution)
+    case 'commuter':
+      price = this.calculateCommuterPrice(product, selectedOptions)
+      employerContribution = this.getEmployerContribution(product.employerContribution, price)
+      return this.formatPrice(price - employerContribution)
     default:
       throw new Error(`Unknown product type: ${product.type}`)
   }
@@ -80,5 +92,6 @@ module.exports = {
   calculateLTDPrice,
   calculateProductPrice,
   calculateVolLifePrice,
-  calculateVolLifePricePerRole
+  calculateVolLifePricePerRole,
+  calculateCommuterPrice
 }
