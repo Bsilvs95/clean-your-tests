@@ -83,6 +83,26 @@ describe('Pricing', () => {
   })
 
 
+  describe('CalculateCommunterPrice', () => {
+    it('returns the price of commuter products without employer contribution (parking)', () => {
+      const selectedOptions = {
+        benefit: 'parking'
+      }
+
+      const price = pricing.calculateCommuterPrice(products.commuter, selectedOptions)
+
+      expect(price).to.equal(250)
+    })
+    it('returns the price of commuter products without employer contribution (train)', () => {
+      const selectedOptions = {
+        benefit: 'train'
+      }
+      const price = pricing.calculateCommuterPrice(products.commuter, selectedOptions)
+
+      expect(price).to.equal(84.75)
+    })
+
+  })
 
 
   describe('calculateProductPrice', () => {
@@ -93,6 +113,7 @@ describe('Pricing', () => {
     let calculateVolLifePricePerRoleSpy
     let calculateVolLifePriceSpy
     let calculateLTDPriceSpy
+
 
     beforeEach(() => {
       sandbox = sinon.createSandbox()
